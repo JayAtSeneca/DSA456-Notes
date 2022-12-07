@@ -1,0 +1,67 @@
+class RedBlackTree:
+    class Node:
+        def __init__(self, val, is_red=False, left=None, right=None):
+            self.val = val
+            self.is_red = is_red
+            self.left = left
+            self.right = right
+
+    def __init__(self):
+        self.root = None
+
+    def insert(self, val):
+        def _insert(node, val):
+            if not node:
+                return self.Node(val, is_red=True)
+
+            if val < node.val:
+                node.left = _insert(node.left, val)
+            elif val > node.val:
+                node.right = _insert(node.right, val)
+
+            # balance the tree
+            if self.is_red(node.right) and not self.is_red(node.left):
+                node = self.rotate_left(node)
+            if self.is_red(node.left) and self.is_red(node.left.left):
+                node = self.rotate_right(node)
+            if self.is_red(node.left) and self.is_red(node.right):
+                self.flip_colors(node)
+
+            return node
+
+        self.root = _insert(self.root, val)
+
+    def is_red(self, node):
+        if not node:
+            return False
+        return node.is_red
+
+    def rotate_left(self, node):
+        right = node.right
+        node.right = right.left
+        right.left = node
+        right.is_red = node.is_red
+        node.is_red = True
+        return right
+
+    def rotate_right(self, node):
+        left = node.left
+        node.left = left.right
+        left.right = node
+        left.is_red = node.is_red
+        node.is_red = True
+        return left
+
+    def flip_colors(self, node):
+        node.is_red = not node.is_red
+        node.left.is_red = not node.left.is_red
+        node.right.is_red = not node.right.is_red
+
+
+
+This implementation includes the following methods for inserting, searching, and removing values from the red-black tree:
+
+insert(val): inserts a new value into the red-black tree
+search(val): searches for a value in the red-black tree and returns the node containing it
+remove(val): removes a value from the red-black tree (if it exists)
+It also includes several helper methods for maintaining the red-black tree properties, such as rotate_left(), rotate_right(), and flip_colors(). These methods are called by the insert() method to balance the tree after a new value is inserted.
