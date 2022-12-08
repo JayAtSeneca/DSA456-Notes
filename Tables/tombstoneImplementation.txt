@@ -1,0 +1,26 @@
+
+class HashTable:
+    def __init__(self, size):
+        self.size = size
+        self.array = [None] * size
+
+    def hash_function(self, key):
+        return key % self.size
+
+    def insert(self, key, value):
+        index = self.hash_function(key)
+        while self.array[index] is not None and self.array[index] != "deleted":
+            index = (index + 1) % self.size
+        self.array[index] = (key, value)
+    
+    def search(self, key):
+        index = self.hash_function(key)
+        while self.array[index] is not None:
+            if self.array[index] == "deleted":
+                index = (index + 1) % self.size
+            elif self.array[index][0] == key:
+                return self.array[index][1]
+            else:
+                index = (index + 1) % self.size
+        return "not found"
+    
